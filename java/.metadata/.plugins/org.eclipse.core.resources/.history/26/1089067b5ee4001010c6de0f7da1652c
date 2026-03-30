@@ -1,0 +1,8 @@
+package hangman;
+
+public class DAO {
+	public String id;
+	public String pw;
+	public int score;
+
+}
