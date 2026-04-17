@@ -17,3 +17,13 @@ CREATE TABLE words (
     word VARCHAR(100) NOT NULL,
     category VARCHAR(50) DEFAULT 'General'
 );
+
+-- 테스트용 단어 몇 개 집어넣기
+INSERT INTO words (word, category) VALUES ('APPLE', 'Fruit');
+INSERT INTO words (word, category) VALUES ('BANANA', 'Fruit');
+INSERT INTO words (word, category) VALUES ('JAVA', 'Programming');
+INSERT INTO words (word, category) VALUES ('ECLIPSE', 'Tool');
+INSERT INTO words (word, category) VALUES ('COMPUTER', 'Tech');
+
+-- 잘 들어갔는지 확인
+SELECT * FROM words;

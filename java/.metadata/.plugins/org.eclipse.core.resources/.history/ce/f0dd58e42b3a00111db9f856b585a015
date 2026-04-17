@@ -1,0 +1,16 @@
+package com.hangman.main;
+
+import java.sql.Connection;
+import com.hangman.util.DBUtil;
+
+public class TestMain {
+    public static void main(String[] args) {
+        Connection conn = DBUtil.getConnection();
+        
+        if (conn != null) {
+            System.out.println("🎉 축하합니다! DB 연결에 성공했습니다.");
+        } else {
+            System.out.println("❌ 연결 실패... 비밀번호나 드라이버 설정을 확인하세요.");
+        }
+    }
+}
