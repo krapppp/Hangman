@@ -1,0 +1,50 @@
+package com.hangman.dao;
+
+import java.sql.*;
+import com.hangman.util.DBUtil;
+import com.hangman.dto.UserDTO;
+
+public class UserDAO {
+    
+    // 로그인 또는 회원가입 (사용자 확인 및 생성)
+    public UserDTO login(String username) {
+        String selectSql = "SELECT * FROM users WHERE username = ?";
+        String insertSql = "INSERT INTO users (username, password, score) VALUES (?, '1234', 0)";
+        
+        try (Connection conn = DBUtil.getConnection()) {
+            // 1. 기존 유저인지 확인
+            PreparedStatement pstmt = conn.prepareStatement(selectSql);
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                System.out.println("👋 다시 오셨군요, " + username + "님! (현재 점수: " + rs.getInt("score") + ")");
+                return new UserDTO(rs.getString("username"), rs.getInt("score"));
+            } else {
+                // 2. 신규 유저 등록
+                PreparedStatement insertPstmt = conn.prepareStatement(insertSql);
+                insertPstmt.setString(1, username);
+                insertPstmt.executeUpdate();
+                System.out.println("✨ 처음 오셨네요! " + username + "님, 환영합니다.");
+                return new UserDTO(username, 0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // 점수 업데이트
+    public void updateScore(String username, int earnedScore) {
+        String sql = "UPDATE users SET score = score + ? WHERE username = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, earnedScore);
+            pstmt.setString(2, username);
+            pstmt.executeUpdate();
+            System.out.println("⭐ 점수가 반영되었습니다! (+" + earnedScore + ")");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

@@ -1,13 +1,53 @@
 package com.hangman.main;
 
 import java.util.Scanner;
+
+import com.hangman.dao.UserDAO;
 import com.hangman.dao.WordDAO;
+import com.hangman.dto.UserDTO;
 import com.hangman.dto.WordDTO;
 
 public class GameMain {
+	
     public static void main(String[] args) {
-        WordDAO dao = new WordDAO();
-        WordDTO target = dao.getRandomWord(); // DB에서 랜덤 단어 가져오기
+    	Scanner sc = new Scanner(System.in);
+        UserDAO userDAO = new UserDAO();
+        UserDTO currentUser = null;
+
+        // --- [로그인/회원가입 선택 루프] ---
+        while (currentUser == null) {
+            System.out.println("\n===== 🎮 HANGMAN GAME =====");
+            System.out.println("1. 로그인  2. 회원가입  3. 종료");
+            System.out.print("선택: ");
+            int menu = sc.nextInt();
+
+            if (menu == 3) {
+                System.out.println("게임을 종료합니다.");
+                return;
+            }
+
+            System.out.print("아이디 입력: ");
+            String id = sc.next();
+            System.out.print("비밀번호 입력: ");
+            String pw = sc.next();
+
+            if (menu == 1) { // 로그인
+                currentUser = userDAO.login(id, pw); // 아까 만든 login도 비번 체크하게 수정 필요
+                if (currentUser != null) {
+                    System.out.println("✅ 로그인 성공! " + id + "님 반갑습니다.");
+                } else {
+                    System.out.println("❌ 아이디 또는 비밀번호가 틀렸습니다.");
+                }
+            } else if (menu == 2) { // 회원가입
+                if (userDAO.register(id, pw)) {
+                    System.out.println("🎊 회원가입 성공! 이제 로그인해 주세요.");
+                }
+            }
+        }
+        
+     // --- [여기서부터 기존 게임 로직 시작] ---
+        WordDAO wordDAO = new WordDAO();
+        WordDTO target = wordDAO.getRandomWord(); // DB에서 랜덤 단어 가져오기
         
         if (target == null) {
             System.out.println("게임에 사용할 단어가 없습니다!");
@@ -23,7 +63,6 @@ public class GameMain {
         }
 
         int lives = 6; // 기회는 6번
-        Scanner sc = new Scanner(System.in);
         boolean isWon = false;
 
         System.out.println("🎮 행맨 게임을 시작합니다! 🎮");
@@ -71,9 +110,9 @@ public class GameMain {
             if (isWon) break;
         }
 
-        // 결과 화면
         if (isWon) {
             System.out.println("\n🎉 축하합니다! 정답은 " + word + "였습니다!");
+            userDAO.updateScore(currentUser.getUsername(), 10); // 승리 시 10점 추가
         } else {
             System.out.println("\n💀 게임 오버... 정답은 " + word + "였습니다.");
         }

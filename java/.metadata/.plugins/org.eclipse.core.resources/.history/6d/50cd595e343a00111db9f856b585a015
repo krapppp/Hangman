@@ -1,0 +1,10 @@
+package com.hangman.dao;
+
+public class UserDAO {
+	public void checkUser(String username) {
+	    // 1. SELECT로 사용자가 있는지 확인
+	    // 2. 없으면 INSERT INTO users (username, password, score) VALUES (...)
+	    // 3. 있으면 "환영합니다" 메시지 출력
+	}
+
+}
