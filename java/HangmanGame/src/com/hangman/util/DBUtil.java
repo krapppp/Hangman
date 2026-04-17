@@ -5,10 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBUtil {
-    // 3306 뒤에 'hangman'은 어제 DBeaver에서 만든 데이터베이스 이름입니다.
+    // 3306 뒤에 'hangman': 어제 DBeaver에서 만든 데이터베이스 이름
     private static final String URL = "jdbc:mysql://localhost:3306/hangman?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC";
     private static final String USER = "root";
-    private static final String PASSWORD = "1234"; // 어제 설정한 비밀번호로 꼭 바꾸세요!
+    private static final String PASSWORD = "1234"; // 설정한 비밀번호로 변경할 것
 
     public static Connection getConnection() {
         Connection conn = null;
